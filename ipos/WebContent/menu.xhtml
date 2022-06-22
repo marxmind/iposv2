@@ -1,0 +1,104 @@
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:h = "http://java.sun.com/jsf/html"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+      >
+ 
+    <ui:composition>
+    	<p:tooltip position="top"/>
+    	<div 
+	   					style="width: 100%;
+						  padding-right: 15px;
+						  padding-left: 15px;
+						  margin-right: auto;
+						  margin-left: auto;
+	   					  padding: 0 !important; 
+	   					  position: fixed;
+						  right: 0;
+						  bottom: 0;
+						  left: 0;
+						  z-index: 1;
+						  background: linear-gradient(#0789b2, #086583, #044357);
+						  
+						  ">
+						<h:outputStylesheet>
+							.menuButton{
+								width: 100%;
+								-webkit-transition-duration: 0.4s; /* Safari */
+								  transition-duration: 0.4s;
+								  cursor: pointer;
+							}
+							.ui-button.menuButton:hover {
+								  background-color: #e7e7e7; /* gray */
+								  color: black;
+								  transform:scale(1.3,1.3);
+							    -webkit-transform:scale(1.3,1.3);
+							    -moz-transform:scale(1.3,1.3);
+							    padding: 20px 10px; /* 5px top/bottom, 10px left/right */
+								} 
+						</h:outputStylesheet>	 
+			             <p:commandButton value="Menu" styleClass="menuButton" onclick="PF('dlgMain').show();"/>
+			               
+			</div>
+    		<p:dialog widgetVar="dlgMain" closable="false" draggable="false" modal="true" showEffect="fade" hideEffect="fade" showHeader="false" position="center center">
+		
+			<p:panelGrid columns="3" styleClass="ui-noborder">
+							
+							<h:outputStylesheet>
+								.button {
+								  background-color: #008CBA; /* blue */
+								  border: none;
+								  color: white;
+								  padding: 15px 32px;
+								  text-align: center;
+								  text-decoration: none;
+								  display: inline-block;
+								  font-size: 16px;
+								  margin: 4px 2px;
+								  cursor: pointer;
+								  width: 100%;
+								  -webkit-transition-duration: 0.4s; /* Safari */
+								  transition-duration: 0.4s;
+								  cursor: pointer;
+								}
+								.ui-button.button:hover {
+								  background-color: #e7e7e7; /* gray */
+								  color: black;
+								}  
+							</h:outputStylesheet>
+							
+						<p:commandButton icon="fa fa-file-o" value="Cashier" action="#{menuBean.pos}" disabled="#{featuresBean.store}" styleClass="button" rendered="#{menuBean.cashier}" immediate="false" ajax="false"/>	
+						<p:commandButton icon="fa fa-male" value="Clients Trans" action="#{menuBean.clients}" disabled="#{featuresBean.clients}" styleClass="button" rendered="#{menuBean.clientsOverCounter}" immediate="false" ajax="false"/>
+						 <p:commandButton icon="fa fa-camera-retro" value="Balance Sheet" action="#{menuBean.accounting}" disabled="#{featuresBean.accounting}" styleClass="button" rendered="#{menuBean.accounting}" immediate="false" ajax="false"/>
+						 	
+			             <p:commandButton icon="fa fa-list-ul" value="Suppliers Trans" action="#{menuBean.suppliers}" disabled="#{featuresBean.suppliers}" styleClass="button" rendered="#{menuBean.supplierTrans}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-money" value="Delivery" action="#{menuBean.delivery}" disabled="#{featuresBean.delivery}" styleClass="button" rendered="#{menuBean.deliveryTrans}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-truck" value="Xtras" action="#{menuBean.xtras}" disabled="#{featuresBean.xtras}" styleClass="button" rendered="#{menuBean.xtras}" immediate="false" ajax="false"/>
+			             
+			             <p:commandButton icon="fa fa-file-text" value="Stats" action="#{menuBean.monitoring}" disabled="#{featuresBean.productStat}" styleClass="button" rendered="#{menuBean.stats}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Store Items" action="#{menuBean.store}" disabled="#{featuresBean.storeTransfer}" styleClass="button" rendered="#{menuBean.storeloader}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Expire" action="#{menuBean.productExpiration}" disabled="#{featuresBean.productExpiration}" styleClass="button" rendered="#{menuBean.expireMonitor}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Table Monitoring" action="#{menuBean.tableMonitoring}" disabled="#{featuresBean.tableMonitoring}" styleClass="button" rendered="#{menuBean.tableMonitor}" immediate="false" ajax="false"/>
+			              
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Receipts" action="#{menuBean.rptTrans}" disabled="#{featuresBean.receiptTrans}" styleClass="button" rendered="#{menuBean.receiptsTrans}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Reset Rcpts" action="#{menuBean.rpt}" disabled="#{featuresBean.receiptSetting}" styleClass="button" rendered="#{menuBean.receiptReset}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Settings" action="#{menuBean.features}" disabled="#{featuresBean.featuresSettings}" styleClass="button" rendered="#{menuBean.settings}" immediate="false" ajax="false"/>
+			             
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="User Setup" action="#{menuBean.adminuser}" disabled="#{featuresBean.adminUser}" styleClass="button" rendered="#{menuBean.userSetting}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Products Setup" action="#{menuBean.adminproduct}" disabled="#{featuresBean.adminProduct}" styleClass="button" rendered="#{menuBean.productSetting}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Suppliers Setup" action="#{menuBean.adminsupplier}" disabled="#{featuresBean.adminSupplier}" styleClass="button" rendered="#{menuBean.supplierSetting}" immediate="false" ajax="false"/>
+			             
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Customer Setup" action="#{menuBean.admincustomer}" disabled="#{featuresBean.adminClient}" styleClass="button" rendered="#{menuBean.customerSetting}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-caret-square-o-down" value="Customer Points" action="#{menuBean.adminpoints}" disabled="#{featuresBean.points}" styleClass="button" rendered="#{menuBean.points}" immediate="false" ajax="false"/>
+			             <p:commandButton icon="fa fa-file-text" onclick="PF('dlgMain').hide();" value="Close" styleClass="button"/>
+			             <p:commandButton icon="fa  fa-power-off" action="login" value="Logout" styleClass="button" actionListener="#{loginBean.logout}" immediate="false" ajax="false"/>
+			              
+			</p:panelGrid>
+		
+	</p:dialog>
+         
+        
+    </ui:composition>
+</html>

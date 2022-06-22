@@ -1,0 +1,56 @@
+
+    .box,
+    .sample-layout > div {
+        background-color: transparent;
+        text-align: center;
+        padding-top: 2em;
+        padding-bottom: 2em;
+        border-radius: 4px;
+        color: transparent;
+    }
+
+    .box-stretched {
+        height: 100%;
+        box-sizing: border-box;
+    }
+
+    .sample-layout {
+        margin: 0;
+    }
+
+    .sample-layout > div {
+        border: 2px solid #ffffff;
+    }
+
+    .vertical-container {
+        margin: 0;
+        height: 200px;
+        background: #efefef;
+        border-radius: 4px;
+    }
+
+    .nested-grid .p-col-4 {
+        padding-bottom: 1em;
+    }
+
+    .doc-table {
+        font-family: arial, sans-serif;
+        border-collapse: collapse;
+        width: 100%;
+    }
+
+    .doc-table th {
+        background-color: #cce4f7;
+    }
+
+    .doc-table td,
+    .doc-table th {
+        border: 1px solid #e5ebf0;
+        text-align: left;
+        padding: 8px;
+    }
+
+    .doc-table tr:nth-child(odd) {
+        background-color: #f3f6f9;
+    }
+     
