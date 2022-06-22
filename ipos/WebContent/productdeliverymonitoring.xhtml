@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui = "http://java.sun.com/jsf/facelets"
+  xmlns:h = "http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+xmlns:p="http://primefaces.org/ui" 
+xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+xmlns:my="http://java.sun.com/jsf/composite/my"  
+  >
+<h:head>
+<link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon.ico']}" />
+<f:facet name="first">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>SHEEDZ Monitoring</title>
+	</f:facet>
+	
+	<f:facet name="middle">
+            <h:outputStylesheet name="bootstrap/css/bootstrap.css"/>
+            <h:outputStylesheet name="css/menu.css"/>
+            <h:outputStylesheet name="css/pageHeaderFooter.css"/>
+            <h:outputStylesheet name="css/bodyconf.css"/>
+    </f:facet>
+        
+    <f:facet name="last">
+ 		<h:outputStylesheet name="css/font-awesome.css" />
+    </f:facet>
+    <title>SHEEDZ Monitoring</title>
+ 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>SHEEDZ Monitoring</title>
+
+</h:head>
+<h:body>
+<h:form prependId="false" id="formId" >
+	
+	<div class="page-header">
+	 		<a><p:outputLabel value="Monitoring" style="#{skin.pageTitle};"/></a>
+	</div>
+	
+	<div class="card">
+    		<div class="p-grid sample-layout">
+    
+			    <div class="p-col-12 p-md-2">
+	
+				<p:toolbar id="tbsearch">
+		    		<f:facet name="left">
+		    			<div class="ui-inputgroup">
+		    			<p:outputLabel value="Filter by "/>
+				        <p:selectOneMenu id="typeId" value="#{delprodmonBean.typeId}" style="width: 10em">
+			            		<f:selectItem itemLabel="Select..."/>
+			            		<f:selectItems value="#{delprodmonBean.types}"/>
+			            </p:selectOneMenu>
+		    			<p:outputLabel value="Group by "/>&nbsp;
+				        <p:selectOneMenu id="rangeId" value="#{delprodmonBean.rangeId}" style="width: 10em">
+			            		<f:selectItem itemLabel="Select..."/>
+			            		<f:selectItems value="#{delprodmonBean.range}"/>
+			            </p:selectOneMenu>
+			            <p:outputLabel value=" for the Month of "/>&nbsp;
+			            <p:selectOneMenu id="monthId" value="#{delprodmonBean.monthId}" style="width: 10em">
+			            		<f:selectItem itemLabel="Select..."/>
+			            		<f:selectItems value="#{delprodmonBean.months}"/>
+			            </p:selectOneMenu>
+			            <p:outputLabel value=" from year "/>&nbsp;
+			            <p:selectOneMenu id="yearIdFrom" value="#{delprodmonBean.yearIdFrom}" style="width: 10em">
+			            		<f:selectItem itemLabel="Select..."/>
+			            		<f:selectItems value="#{delprodmonBean.yearFrom}"/>
+			            </p:selectOneMenu>
+			            <p:outputLabel value=" to year "/>&nbsp;
+			            <p:selectOneMenu id="yearIdTo" value="#{delprodmonBean.yearIdTo}" style="width: 10em">
+			            		<f:selectItem itemLabel="Select..."/>
+			            		<f:selectItems value="#{delprodmonBean.yearTo}"/>
+			            </p:selectOneMenu>
+			            <p:commandButton update="tranDataId" icon="fa fa-search" action="#{delprodmonBean.init}"/>
+			            </div>
+		    		</f:facet>
+		    		<f:facet name="right">
+		    		</f:facet>
+				</p:toolbar>
+			
+				<p:dataTable id="tranDataId" value="#{delprodmonBean.products}" var="tranData" rows="10" paginator="true" paginatorTemplate="{Exporters} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+		                         rowsPerPageTemplate="5,10,15,20,50,100"
+		                         scrollable="true" styleClass="dataDesignTable" paginatorPosition="top">
+			        			
+			     		   			<f:facet name="{Exporters}">
+		            						<h:commandLink title="Show graph" target="_blank" action="graphline.xhtml">
+		                						    <p:graphicImage name="img/stat.jpg" width="24" height="24"/>
+		            						</h:commandLink>
+		            				</f:facet>
+		            				
+		            				
+		            				<p:column headerText="Date" width="50">
+		            						<h:outputText  value="#{tranData.dateTrans}"/>
+		            				</p:column>
+		            				<p:column headerText="Product" width="300">
+		            						<h:outputText  value="#{tranData.product.productProperties.productname}"/>
+		            				</p:column>
+		            				<p:column headerText="Quantity" width="50">
+		            						<h:outputText  value="#{tranData.quantity}"/>
+		            				</p:column>
+				</p:dataTable>
+				
+				</div>
+				</div>
+				</div>
+				
+		
+<ui:include src="loader.xhtml" />
+<ui:include src="menu.xhtml" />		
+</h:form>
+
+<br/><br/><br/><br/>
+</h:body>
+</html>

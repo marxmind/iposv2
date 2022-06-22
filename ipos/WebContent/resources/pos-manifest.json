@@ -1,0 +1,22 @@
+{
+  "short_name": "iPOS",
+  "name": "i Point of Sale and Inventory System (MARXMIND IT SOLUTIONS)",
+  "description": "Point of Sale and Inventory System",
+  "icons": [
+    {
+      "src": "favicon.ico",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "favicon.ico",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "localhost:8080/ipos",
+  "background_color": "#3367D6",
+  "display": "standalone",
+  "scope": "/",
+  "theme_color": "#3367D6"
+}
