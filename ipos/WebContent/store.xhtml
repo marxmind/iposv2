@@ -1,0 +1,584 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+  xmlns:ui = "http://java.sun.com/jsf/facelets"
+  xmlns:h = "http://java.sun.com/jsf/html"
+  xmlns:f="http://java.sun.com/jsf/core"
+xmlns:p="http://primefaces.org/ui" 
+xmlns:a="http://xmlns.jcp.org/jsf/passthrough"
+xmlns:my="http://java.sun.com/jsf/composite/my"  
+  >
+<h:head>
+<link rel="shortcut icon" type="image/x-icon" href="#{resource['favicon.ico']}" />
+<f:facet name="first">
+			<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+            <meta content="text/html; charset=UTF-8" http-equiv="Content-Type" />
+            <meta name="viewport" content="width=device-width, initial-scale=1" />
+            <title>Store</title>
+	</f:facet>
+	
+	<f:facet name="middle">
+			
+            <h:outputStylesheet name="bootstrap/css/bootstrap.min.css"/>
+            <h:outputStylesheet name="css/pageHeaderFooter.css"/>
+            <h:outputScript name="jquery/jquery.min.js" target="head"/>
+            <h:outputScript name="bootstrap/js/bootstrap.min.js" target="head"/>
+            <h:outputScript name="zxing/zxing.js"/>
+            <h:outputStylesheet name="css/growl.css"/>
+            <h:outputStylesheet name="css/bodyconf.css"/>
+            <h:outputStylesheet name="primeicons/primeicons.css" library="primefaces" />
+    </f:facet>
+        
+    
+    <f:facet name="last">
+ 		<h:outputStylesheet name="css/font-awesome.css" />
+	</f:facet>
+
+    <title>Store</title>
+
+<style>
+<!-- 
+
+ -->
+ </style>
+
+ 
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<title>Store</title>
+
+</h:head>
+
+<h:body>
+
+<h:form prependId="false" id="formId" >
+		<p:growl id="msg" showDetail="true" />
+		
+		<p:confirmDialog global="true" showEffect="fade" hideEffect="fade">
+        	<p:commandButton value="Yes" type="button" styleClass="ui-confirmdialog-yes" icon="ui-icon-check" />
+        	<p:commandButton value="No" type="button" styleClass="ui-confirmdialog-no" icon="ui-icon-close" />
+    	 </p:confirmDialog>
+	
+	<div class="page-header">
+	 		<a><p:outputLabel value="Store Setup" style="#{skin.pageTitle};"/></a>
+	</div>
+	
+		<div class="card">
+    		<div class="p-grid sample-layout">
+    
+			    <div class="p-col-12 p-md-12">
+					
+					<p:tabView orientation="left" id="tabProduct" prependId="false" style="#{skin.tabs}" dynamic="true">
+    	
+    	<p:ajax event="tabChange" listener="#{storeBean.onTabChange}" update="tabProduct msg" />
+    	
+    	<p:tab title="Hold Transaction">
+    	
+    		 <p:toolbar id="disbar">
+            	<f:facet name="left">
+            		<p:commandButton update="runDataId,msg"  value="Return to Store" icon="fa fa-long-arrow-left"  actionListener="#{storeBean.addToInventoryProductFailed}">
+            			<p:confirm header="Confirmation" message="Are you sure you want to Recall item's quantity to store?" />
+            		</p:commandButton>
+    			</f:facet>
+    			<f:facet name="right">
+    				<p:commandButton update="runDataId" value="Refresh" icon="fa fa-refresh" action="#{storeBean.initFailedDispenseProductInStore}"/>
+    				
+    			</f:facet>
+		  	</p:toolbar>
+		  	
+               		 <p:dataTable id="runDataId" value="#{storeBean.productRunning}" var="rpt" 
+							rows="10" paginator="true" paginatorTemplate="{Exporters} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,50,100"
+                         scrollable="true" paginatorPosition="top" paginatorAlwaysVisible="false"
+                         >
+                         	 
+                         	 <f:facet name="{Exporters}">
+            						<h:commandLink title="Export Product in excel format">
+                						    <p:graphicImage name="img/xls.jpg" width="24" height="24"/>
+                							<p:dataExporter type="xls" target="runDataId" fileName="ProductFailedInDispense" />
+            						</h:commandLink>
+            						<h:commandLink title="Export Product in pdf format">
+                						    <p:graphicImage name="img/pdf.jpg" width="24" height="24"/>
+                						    <p:dataExporter type="pdf" target="runDataId" fileName="ProductFailedInDispense" />
+            						</h:commandLink>
+            				</f:facet>
+            				
+            				<p:column headerText="Date" width="70">
+            						<p:outputLabel value="#{rpt.qtyrundate}"/>
+            				</p:column>
+            				
+            				
+            				<p:column headerText="Status" width="70">
+            							<f:view>
+                         			 		<my:if condition="#{rpt.qtystatus==1}">
+                         			 			<f:facet name="then">
+            										<p:outputLabel value="ON HOLD"/>
+            									</f:facet>
+            								<f:facet name="else">
+            										<p:outputLabel value="RECALLED"/>
+            								</f:facet>
+            						  		</my:if>
+            						  </f:view>
+            				</p:column>
+            				
+            				<p:column headerText="Product" width="100">
+            						<p:outputLabel value="#{rpt.product.productProperties.productname}"/>
+            				</p:column>
+            						
+            				<p:column headerText="UOM" width="50">
+            						<p:outputLabel value="#{rpt.product.productProperties.uom.symbol}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Qty" width="50">
+            						<p:outputLabel value="#{rpt.qtyhold}"/>
+            				</p:column>
+            				
+            				
+            				
+            		</p:dataTable>	
+    		
+    	</p:tab>
+    	
+        <p:tab title="Store Product">
+            
+            <p:toolbar id="toolStore">
+            	<f:facet name="left">
+            		<div class="ui-inputgroup">
+            		
+            		<p:outputLabel value="Filter quantity: " />
+        			<p:selectBooleanCheckbox value="#{storeBean.nonZero}">
+            			<p:ajax update="storeDataId,msg" listener="#{storeBean.nonZeroMessage}" />
+        			</p:selectBooleanCheckbox>
+        			<p:separator/><p:separator/>
+        			<p:outputLabel value="Load All: " />
+        			<p:selectBooleanCheckbox value="#{storeBean.loadAll}">
+            			<p:ajax update="storeDataId,msg" listener="#{storeBean.loadAllMessage}" />
+        			</p:selectBooleanCheckbox>
+        			<p:separator/><p:separator/>
+    				<p:inputText id="storeProductId" value="#{storeBean.searchStoreProduct}" a:placeholder="Search product">
+    					<f:ajax event="keyup" listener="#{storeBean.loadStore}" render="storeDataId"/>
+    				</p:inputText>
+    				<p:separator/>
+    				<p:commandButton update="storeDataId" icon="fa fa-search" action="#{storeBean.loadStore}"/>
+    				</div>
+    			</f:facet>
+    			<f:facet name="right">
+    				<p:commandButton update="storeDataId" value="Refresh" icon="fa fa-search" action="#{storeBean.loadStore}"/>
+    			</f:facet>
+		  	</p:toolbar>
+            
+            
+             <p:dataTable id="storeDataId" value="#{storeBean.storeProducts}" var="rpt" 
+							rows="10" paginator="true" paginatorTemplate="{Exporters} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,50,100"
+                         scrollable="true" paginatorPosition="top" paginatorAlwaysVisible="false"
+                         >
+                         	 
+                         	 <f:facet name="{Exporters}">
+            						<h:commandLink title="Export Product in excel format">
+                						    <p:graphicImage name="img/xls.jpg" width="24" height="24"/>
+                							<p:dataExporter type="xls" target="storeDataId" fileName="Store" />
+            						</h:commandLink>
+            						<h:commandLink title="Export Product in pdf format">
+                						    <p:graphicImage name="img/pdf.jpg" width="24" height="24"/>
+                						    <p:dataExporter type="pdf" target="storeDataId" fileName="Store" />
+            						</h:commandLink>
+            				</f:facet>
+            				
+            				<p:column headerText="Barcode" width="70">
+            						<p:outputLabel value="#{rpt.barcode}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Product" width="120">
+            						<p:outputLabel value="#{rpt.productName}"/>
+            				</p:column>
+            				
+            				<p:column headerText="UOM" width="30">
+            						<p:outputLabel value="#{rpt.uomSymbol}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Quantity" width="50">
+            						<p:outputLabel value="#{rpt.quantity}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Purchased" width="50">
+            						<p:outputLabel value="#{rpt.purchasedPrice}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Sale" width="50">
+            						<p:outputLabel value="#{rpt.sellingPrice}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Net" width="50">
+            						<p:outputLabel value="#{rpt.netPrice}"/>
+            				</p:column>
+            				
+            		</p:dataTable>
+            
+        </p:tab>
+        <p:tab title="Product Loading">
+           
+           <p:toolbar id="loadingStore">
+            	<f:facet name="left">
+            		<div class="ui-inputgroup">
+    				<p:inputText value="#{storeBean.searchStoreProduct}" a:placeholder="Search product">
+    					<f:ajax event="keyup" listener="#{storeBean.loadLoading}" render="tranDataId"/>
+    				</p:inputText>
+    				<p:calendar value="#{storeBean.dateFromProductLoading}" pattern="yyyy-MM-dd" effect="slideDown" inputStyle="width: 15em"/>
+    				<p:calendar value="#{storeBean.dateToProductLoading}" pattern="yyyy-MM-dd" effect="slideDown" inputStyle="width: 15em"/>
+    				<p:commandButton update="tranDataId" icon="fa fa-search" action="#{storeBean.loadLoading}"/>
+    				</div>
+    			</f:facet>
+    			
+    			<f:facet name="right">
+    				<div class="ui-inputgroup">
+    				<p:commandButton update="transId" value="Clear" icon="fa fa-refresh" action="#{storeBean.clearLoading}"/>
+    				<p:commandButton update="transId tranDataId msg" value="Save" icon="fa fa fa-floppy-o" action="#{storeBean.saveTrans}">
+    					<p:confirm header="Confirmation" message="Are you sure you want to add this item?" icon="ui-icon-alert" />
+    				</p:commandButton>
+    				<p:commandButton update="transId tranDataId msg" value="Posted" icon="fa fa fa-floppy-o" action="#{storeBean.postedLoading}">
+    					<p:confirm header="Confirmation" message="Are you sure you want to post this item?" />
+    				</p:commandButton>
+    				<p:commandButton update="tranDataId" value="Refresh" icon="fa fa-refresh" action="#{storeBean.loadLoading}"/>
+    				</div>
+    			</f:facet>
+		  	</p:toolbar>
+            
+           
+            
+            <p:panelGrid id="transId"  columns="8" styleClass="ui-noborder">
+            			
+            			<p:outputLabel value="Date" />
+						<p:inputText value="#{storeBean.dateTrans}" a:placeholder="YYYY-MM-DD" a:type="date" style="width: 16em"/>
+            	
+            			<p:outputLabel value="Status" />
+						<p:outputLabel value="#{storeBean.status}" style="width: 16em"/>
+	        			
+	        			<p:outputLabel value="Product" />
+	        			<p:commandButton id="productBtn" value="#{storeBean.productNameLoading}" update="transId" actionListener="#{storeBean.loadProducts}" icon="pi pi-search" />
+	        			
+	        			<p:outputLabel/>
+	        			<p:overlayPanel for="productBtn" dynamic="true" style="width:700px" widgetVar="productPicker">
+				            	<div class="ui-inputgroup">
+										<span class="ui-input-icon-left">
+										<i class="pi pi-search" />
+										<p:inputText id="idProdSearch" value="#{storeBean.searchSelectedProduct}" a:placeholder="Search product" style="width: 20em">
+									    	<p:ajax event="keyup" listener="#{storeBean.loadProducts}" delay="800" update="productDataId"/>
+						    			</p:inputText>
+									</span>
+								</div>
+								
+								<p:dataGrid id="productDataId" var="rpt" value="#{storeBean.selectProducts}" columns="5" lazy="true"
+										                	rows="10" paginator="true" style="margin-top:20px" paginatorAlwaysVisible="false" paginatorPosition="top" emptyMessage="Please search an item">
+										 				
+										<p:card style="width: 15em">
+											
+											<f:facet name="title">
+												#{rpt.productProperties.productname}
+											</f:facet>
+											<f:facet name="subtitle">
+												#{rpt.productProperties.productBrand.productbrandname}
+											</f:facet>
+											<f:facet name="footer">
+												
+												<p:commandButton update="idQty uid remId productBtn"  value="Select" icon="fa fa-shopping-cart" actionListener="#{storeBean.selectedProduct(rpt)}"  style="margin-left: .5em"/>
+												
+											</f:facet>
+											 					
+										</p:card>
+								</p:dataGrid>
+				            </p:overlayPanel>
+	        			 
+						<p:outputLabel value="Quantity" />
+	        			<p:inputText id="idQty" value="#{storeBean.quantity}" a:placeholder="0.00" a:type="number" style="width: 16em"/>
+	        			
+	        			<p:outputLabel value="UOM" />
+	        			<p:outputLabel id="uid" value="#{storeBean.uomSymbol}" />
+            
+            			<p:outputLabel value="Remaining Qty in Warehouse" />
+	        			<p:outputLabel id="remId" value="#{storeBean.inventoryQty}" />
+            			
+            			<p:outputLabel/>
+            			<p:outputLabel/>
+            </p:panelGrid>
+            
+             <p:dataTable id="tranDataId" value="#{storeBean.storeTrans}" var="rpt" 
+							rows="10" paginator="true" paginatorTemplate="{Exporters} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,50,100"
+                         scrollable="true" paginatorPosition="top" paginatorAlwaysVisible="false"
+                         selection="#{storeBean.selectedPost}" rowKey="#{rpt.id}"
+                         >
+                         	 
+                         	 <f:facet name="{Exporters}">
+            						<h:commandLink title="Export Product in excel format">
+                						    <p:graphicImage name="img/xls.jpg" width="24" height="24"/>
+                							<p:dataExporter type="xls" target="tranDataId" fileName="Store" />
+            						</h:commandLink>
+            						<h:commandLink title="Export Product in pdf format">
+                						    <p:graphicImage name="img/pdf.jpg" width="24" height="24"/>
+                						    <p:dataExporter type="pdf" target="tranDataId" fileName="Store" />
+            						</h:commandLink>
+            				</f:facet>
+            				
+            				<p:column selectionMode="multiple" headerText="Post" style="width:16px;text-align:center"/>
+            				
+            				<p:column headerText="Date" width="70">
+            						<p:outputLabel  value="#{rpt.dateTrans}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Action" width="20">
+            					<p:commandButton update="transId" icon="fa fa-search"  actionListener="#{storeBean.clickItem(rpt)}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Status" width="50">
+            							<f:view>
+                         			 		<my:if condition="#{rpt.status==1}">
+                         			 			<f:facet name="then">
+            										<p:outputLabel value="NEW"/>
+            									</f:facet>
+            								<f:facet name="else">
+            										<p:outputLabel value="POSTED"/>
+            								</f:facet>
+            						  		</my:if>
+            						  </f:view>
+            				</p:column>
+            				
+            				<p:column headerText="Product" width="200">
+            						<p:outputLabel value="#{rpt.productProperties.productname}"/>
+            				</p:column>
+            				
+            				<p:column headerText="UOM" width="30">
+            						<p:outputLabel value="#{rpt.uom.symbol}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Quantity" width="50">
+            						<p:outputLabel value="#{rpt.quantity}"/>
+            				</p:column>
+            				
+            		</p:dataTable>
+           
+        </p:tab>
+        
+        <p:tab title="Return Loading">
+           
+           <p:toolbar id="loadingReturn">
+            	<f:facet name="left">
+            		<div class="ui-inputgroup">
+    				<p:inputText value="#{storeBean.searchReturnStoreProduct}" a:placeholder="Search product">
+    					<f:ajax event="keyup" listener="#{storeBean.returnLoading}" render="retDataId"/>
+    				</p:inputText>
+    				<p:commandButton update="retDataId" icon="fa fa-search" action="#{storeBean.returnLoading}"/>
+    				</div>
+    			</f:facet>
+    			
+    			<f:facet name="right">
+    				<div class="ui-inputgroup">
+    				<p:commandButton update="retFieldId" value="Clear" icon="ui-icon-refresh" action="#{storeBean.clearReturn}"/>
+    				<p:commandButton update="retFieldId,retDataId,msg" value="Save" icon="fa fa-floppy-o" action="#{storeBean.saveReturn}">
+    					<p:confirm header="Confirmation" message="Are you sure you want to add this item?" icon="ui-icon-alert" />
+    				</p:commandButton>
+    				<p:commandButton update="retFieldId,retDataId,msg" value="Posted" icon="fa fa-floppy-o" action="#{storeBean.postedReturn}">
+    					<p:confirm header="Confirmation" message="Are you sure you want to post this item?" />
+    				</p:commandButton>
+    				<p:commandButton update="retDataId" value="Refresh" icon="fa fa-refresh" action="#{storeBean.returnLoading}"/>
+    				</div>
+    			</f:facet>
+		  	</p:toolbar>
+        	
+        	<p:panelGrid id="retFieldId"  columns="6" styleClass="ui-noborder">
+            			
+            			<p:outputLabel value="Date" />
+						<p:inputText value="#{storeBean.dateTransReturn}" a:placeholder="YYYY-MM-DD" a:type="date" style="width: 16em"/>
+            	
+            			<p:outputLabel value="Status" />
+						<p:outputLabel value="#{storeBean.statusReturn}" style="width: 16em"/>
+	        			
+	        			<p:outputLabel value="Product" />
+	        				<p:selectOneMenu id="prodRetId" value="#{storeBean.productIdReturn}" style="width: 16em" filter="true" filterMatchMode="contains">
+	                			<f:selectItem itemLabel="Select" />
+	                			<f:selectItems value="#{storeBean.productsReturn}" />
+	                			<f:ajax event="change" listener="#{storeBean.productStoreQty}" render="retFieldId"/>
+	            			</p:selectOneMenu>
+						
+						
+						<p:outputLabel value="Quantity" />
+	        			<p:inputText value="#{storeBean.quantityReturn}" a:placeholder="0.00" a:type="number" style="width: 16em"/>
+	        			
+	        			<p:outputLabel value="UOM" />
+	        			<p:outputLabel value="#{storeBean.uomSymbolReturn}" />
+            
+            			<p:outputLabel value="Remaining Qty in Store" />
+	        			<p:outputLabel value="#{storeBean.storeQtyReturn}" />
+            			
+            </p:panelGrid>
+        	
+        	<p:dataTable id="retDataId" value="#{storeBean.retrunTrans}" var="rpt" 
+							rows="10" paginator="true" paginatorTemplate="{Exporters} {CurrentPageReport} {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink} {RowsPerPageDropdown}"
+                         rowsPerPageTemplate="5,10,15,20,50,100"
+                         scrollable="true" paginatorPosition="top" paginatorAlwaysVisible="false"
+                         selection="#{storeBean.selectedRetunPost}" rowKey="#{rpt.id}"
+                         >
+                         	 
+                         	 <f:facet name="{Exporters}">
+            						<h:commandLink title="Export Product in excel format">
+                						    <p:graphicImage name="img/xls.jpg" width="24" height="24"/>
+                							<p:dataExporter type="xls" target="retDataId" fileName="Store" />
+            						</h:commandLink>
+            						<h:commandLink title="Export Product in pdf format">
+                						    <p:graphicImage name="img/pdf.jpg" width="24" height="24"/>
+                						    <p:dataExporter type="pdf" target="retDataId" fileName="Store" />
+            						</h:commandLink>
+            				</f:facet>
+            				
+            				<p:column selectionMode="multiple" headerText="Post" style="width:16px;text-align:center"/>
+            				
+            				<p:column headerText="Date" width="70">
+            						<p:outputLabel value="#{rpt.dateTrans}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Action" width="20">
+            					<p:commandButton update="retFieldId" icon="fa fa-search"  actionListener="#{storeBean.clickItemReturn(rpt)}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Status" width="50">
+            							<f:view>
+                         			 		<my:if condition="#{rpt.status==1}">
+                         			 			<f:facet name="then">
+            										<p:outputLabel value="NEW"/>
+            									</f:facet>
+            								<f:facet name="else">
+            										<p:outputLabel value="POSTED"/>
+            								</f:facet>
+            						  		</my:if>
+            						  </f:view>
+            				</p:column>
+            				
+            				<p:column headerText="Product" width="200">
+            						<p:outputLabel value="#{rpt.productProperties.productname}"/>
+            				</p:column>
+            				
+            				<p:column headerText="UOM" width="30">
+            						<p:outputLabel value="#{rpt.uom.symbol}"/>
+            				</p:column>
+            				
+            				<p:column headerText="Quantity" width="50">
+            						<p:outputLabel value="#{rpt.quantity}"/>
+            				</p:column>
+            				
+            		</p:dataTable>
+        	
+        </p:tab>
+    	</p:tabView>
+					
+				</div>
+			</div>
+	
+		</div><!-- card -->			
+
+<p:dialog widgetVar="dlgCam" visible="false" fitViewport="true" position="center center" modal="true" draggable="false" closable="false" closeOnEscape="false" resizable="false" showHeader="false" >
+		
+		
+		<p:panelGrid columns="1" layout="grid">
+	        <p:commandButton value="Close Camera" id="resetButton" oncomplete="PF('dlgCam').hide();showQR()"/>
+        </p:panelGrid>
+		
+		<p:separator/>
+		<label>Change video source:</label>
+        <select id="sourceSelect" style="max-width:400px"/>
+		<div id="sourceSelectPanel" style="display:none">
+		
+			<p:panelGrid columns="1" layout="grid">
+		
+				<video id="video" width="700" height="500" style="border: 1px solid gray"/>
+		
+				
+        		
+			</p:panelGrid>
+		</div>
+		
+</p:dialog>
+<p:remoteCommand name="loadResult"
+                      action="#{storeBean.findQRCode}" update="storeProductId storeDataId msg"
+                      />
+	<h:outputScript>
+	
+		
+    function showQR(){
+    	$('#qrcodeDivId').show(1000);
+    }
+    function hideQR(){
+    	$('#qrcodeDivId').hide(1000);
+    	
+    }
+	
+	function closeCamera(){
+		$('#resetButton').trigger('click');
+	}
+	
+	
+	window.addEventListener('load', function () {
+	
+      let selectedDeviceId;
+      const codeReader = new ZXing.BrowserMultiFormatReader();
+      //const codeReader = new ZXing.BrowserQRCodeReader();
+      console.log('ZXing code reader initialized')
+      codeReader.listVideoInputDevices()
+        .then((videoInputDevices) => {
+          const sourceSelect = document.getElementById('sourceSelect')
+          selectedDeviceId = videoInputDevices[0].deviceId
+          if (videoInputDevices.length >= 1) {
+            videoInputDevices.forEach((element) => {
+              const sourceOption = document.createElement('option')
+              sourceOption.text = element.label
+              sourceOption.value = element.deviceId
+              sourceSelect.appendChild(sourceOption)
+            })
+
+            sourceSelect.onchange = () => {
+              selectedDeviceId = sourceSelect.value;
+            };
+
+            const sourceSelectPanel = document.getElementById('sourceSelectPanel')
+            sourceSelectPanel.style.display = 'block'
+          }
+			
+          document.getElementById('startButton').addEventListener('click', () => {
+            codeReader.decodeFromVideoDevice(selectedDeviceId, 'video', (result, err) => {
+              if (result) {
+                console.log(result)
+                
+                
+                loadResult([{
+			        name: 'qrcode',
+			        value: result.text
+			      }]);
+                
+              }
+              
+            })
+            console.log(`Started continous decode from camera with id ${selectedDeviceId}`)
+          })
+			
+				
+          document.getElementById('resetButton').addEventListener('click', () => {
+            codeReader.reset()
+            document.getElementById('result').textContent = '';
+            console.log('Reset.')
+          })
+          
+			
+        })
+        .catch((err) => {
+          console.error(err)
+        })
+    })
+	
+	
+	</h:outputScript>
+<div id="qrcodeDivId" style="display: none">
+<p:commandButton title="QRCode Scanner" widgetVar="widCamera" icon="fa fa-qrcode" id="startButton" oncomplete="PF('dlgCam').show();hideQR()" style="-moz-border-radius: 100px;-webkit-border-radius: 100px;border-radius: 100px;height: 30px;width: 30px;top: 55px;left: 715px;float:left; position: fixed;z-index: 1500;font-size: 70% ! important;font-weight: bold ! important;  text-transform: none ! important; "/>	
+</div>
+<ui:include src="loader.xhtml" />
+<ui:include src="menu.xhtml" />
+</h:form>		
+</h:body>
+</html>
