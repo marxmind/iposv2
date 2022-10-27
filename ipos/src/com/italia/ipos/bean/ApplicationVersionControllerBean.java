@@ -33,9 +33,13 @@ public class ApplicationVersionControllerBean {
 	@Setter @Getter private Copyright copyright;
 	@Setter @Getter private List<License> licenses = new ArrayList<License>();
 	
+	@Setter @Getter private static boolean hasBeenLooaded=false;
+	
 	@PostConstruct
 	public void init(){
 		 
+		//if(!isHasBeenLooaded()) {
+		
 		String sql = "SELECT * FROM app_version_control ORDER BY timestamp DESC LIMIT 1";
 		String[] params = new String[0];
 		versionController = ApplicationVersionController.retrieve(sql, params).get(0);
@@ -53,7 +57,8 @@ public class ApplicationVersionControllerBean {
 		sql = "SELECT * FROM license";
 		licenses = new ArrayList<License>();
 		licenses = License.retrieve(sql, new String[0]);
-		
+		hasBeenLooaded=true;
+		//}
 	}
 	
 }

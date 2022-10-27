@@ -97,9 +97,9 @@ public class LoginBean implements Serializable{
 		IBean.removeBean();
 		
 		//load business wallpaper
-		String wallpaper = ReadConfig.value(Ipos.BUSINESS_WALLPAPER_FILE);
+		//String wallpaper = ReadConfig.value(Ipos.BUSINESS_WALLPAPER_FILE);
 		//System.out.println("wallpaper >>> " + wallpaper);
-		copyProductImg(wallpaper);
+		//copyProductImg(wallpaper);
 	}
 	
 	public void copyProductImg(String wallpaper){
